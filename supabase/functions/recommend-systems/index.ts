@@ -1,6 +1,5 @@
-
 import "jsr:@supabase/functions-js/edge-runtime.d.ts"
-import { GoogleGenAI, Type } from "npm:@google/genai@^0.1.1"
+import { GoogleGenAI, Type } from "npm:@google/genai@^1.0.0"
 import process from "node:process"
 
 declare const Deno: any;
@@ -35,12 +34,14 @@ Deno.serve(async (req: any) => {
       }
     };
 
+    // Uses gemini-3-pro-preview with thinking budget to map problems to systems
     const response = await ai.models.generateContent({
-      model: 'gemini-2.0-flash-exp',
+      model: 'gemini-3-pro-preview',
       contents: `Recommend 5 AI/Business systems for a ${industry} company dealing with: ${JSON.stringify(bottlenecks)}. Mark 2-3 as recommended.`,
       config: {
         responseMimeType: "application/json",
         responseSchema: schema,
+        thinkingConfig: { thinkingBudget: 1024 }
       }
     });
 

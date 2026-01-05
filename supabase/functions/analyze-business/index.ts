@@ -1,6 +1,5 @@
-
 import "jsr:@supabase/functions-js/edge-runtime.d.ts"
-import { GoogleGenAI, Type } from "npm:@google/genai@^0.1.1"
+import { GoogleGenAI, Type } from "npm:@google/genai@^1.0.0"
 import process from "node:process"
 
 declare const Deno: any;
@@ -44,8 +43,9 @@ Deno.serve(async (req: any) => {
       Provide 3 key strategic observations.
     `
 
+    // Uses gemini-3-flash-preview for low latency + search capability
     const response = await ai.models.generateContent({
-      model: 'gemini-2.0-flash-exp', // Or gemini-3-flash-preview when available/stable
+      model: 'gemini-3-flash-preview',
       contents: prompt,
       config: {
         responseMimeType: "application/json",
