@@ -6,8 +6,10 @@ All notable changes to the Sun AI Agency Platform will be documented in this fil
 ## [Unreleased]
 
 ### Added
+- **Wizard**: Added "Fashion Retail" to the Industry dropdown in Step 1.
 - **Edge Functions**: Added Fintech, Healthcare, and Manufacturing blueprints to `generate-questions`.
 - **Edge Functions**: Added logic to `generate-questions` to ask clarifying questions for generic industries (e.g., "Technology", "Services").
+- **Edge Functions**: Added "Fashion Retail" blueprint with specific jargon (Dead Stock, Returns, Seasonality) and system hints.
 - **Docs**: Created `progress-tracker.md` to track wizard and dashboard development status.
 
 ### Changed

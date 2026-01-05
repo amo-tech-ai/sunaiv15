@@ -63,8 +63,14 @@ Deno.serve(async (req: any) => {
       - Business Focus: Output efficiency, Supply chain resilience, Order accuracy, Yield rates.
       - Operational Friction: Quality control, Inventory tracking, Machine maintenance, Shift scheduling.
       - Speed: Production cycles, Quote-to-cash, Prototype to production.
+
+      8. Fashion Retail
+      Context: Seasonality, high return rates (sizing), visual content intensity, trend cycles.
+      - Business Focus: Profitability leaks (Returns reduction, Dead stock markdowns, CAC/Ad efficiency).
+      - Operational Friction: Visual Content Production (Lookbooks/Social), Returns Management (Reverse logistics), Multi-channel Inventory Sync.
+      - Speed: Concept-to-Shelf velocity, Restocking best-sellers, Launching new collections.
       
-      8. General / Other / Unsure
+      9. General / Other / Unsure
       Context: Fundamental business health.
       - Business Focus: Revenue blocker (New Leads, Closing Deals, Repeat Business, Pricing).
       - Operational Friction: Manual admin (Data Entry, Scheduling, Email/Comms, Paperwork).
@@ -117,7 +123,7 @@ Deno.serve(async (req: any) => {
          System Hint: Use 'model_identification' for these options.
       
       3. OTHERWISE (if industry is specific):
-         Match it to the closest Blueprint: [SaaS, E-Commerce, Agency, Real Estate, Fintech, Healthcare, Manufacturing].
+         Match it to the closest Blueprint: [SaaS, E-Commerce, Fashion Retail, Agency, Real Estate, Fintech, Healthcare, Manufacturing].
          Generate 4 questions based on the Blueprint structure:
          - Question 1 (Business Focus): Revenue/Growth bottlenecks.
          - Question 2 (Operational Friction): Manual work/Time sinks.
@@ -125,8 +131,8 @@ Deno.serve(async (req: any) => {
          - Question 4 (Priority): The "North Star" fix.
 
       4. CRITICAL RULES:
-         - Use industry jargon (e.g., "KYC" for Fintech, "EMR" for Healthcare, "SKU" for Retail, "Billable Hours" for Agencies).
-         - 'system_hint' tags MUST be snake_case and imply a specific software solution category (e.g. 'kyc_auto', 'inventory_sync', 'lead_scoring_ai', 'predictive_maintenance'). 
+         - Use industry jargon (e.g., "KYC" for Fintech, "EMR" for Healthcare, "SKU" for Retail, "Billable Hours" for Agencies, "Dead Stock" for Fashion).
+         - 'system_hint' tags MUST be snake_case and imply a specific software solution category (e.g. 'kyc_auto', 'inventory_sync', 'lead_scoring_ai', 'predictive_maintenance', 'returns_processing', 'content_creation_ai'). 
          - Do not use generic tags like 'growth' or 'ops'. Be specific: 'invoice_processing', 'fraud_detection', 'patient_scheduling_ai'.
 
       REFERENCE BLUEPRINTS:

@@ -1,7 +1,7 @@
 
 # Sun AI Agency — Setup Audit + Progress Tracker (Wizard + Dashboard)
 
-**Version:** 1.1
+**Version:** 1.3
 **Auditor:** Senior Product Architect  
 **Date:** Current
 
@@ -15,7 +15,7 @@ The Sun AI Agency Platform core wizard flow is **Functionally Complete** on the 
 *   **End-to-End Flow:** Users can progress from Business Context to a generated Strategy.
 *   **AI Integration:** All 5 steps trigger real server-side Gemini calls.
 *   **Search Grounding:** Step 1 successfully verifies real-world businesses with enhanced 'About Us' page analysis.
-*   **Deep Dive:** Step 2 now supports Fintech, Healthcare, Manufacturing and handles generic industries with clarifying questions.
+*   **Deep Dive:** Step 2 now supports Fintech, Healthcare, Manufacturing, Fashion Retail (with jargon-specific blueprints) and handles generic industries.
 *   **UI/UX:** High-fidelity, responsive "Premium" design is implemented.
 
 **Biggest risks:**
@@ -36,8 +36,8 @@ The Sun AI Agency Platform core wizard flow is **Functionally Complete** on the 
 
 | Area | Screen / Module | Main Panel Status | Right Panel AI Status | Gemini 3 Tools Status | Agents/Logic Status | Backend Status | Notes / Next Step |
 |------|------------------|-------------------|-----------------------|------------------------|---------------------|----------------|-------------------|
-| **Wizard** | Screen 1 (Context) | ✅ Complete | ✅ Complete | ✅ Search Grounding | ✅ Researcher + Analyst | ✅ Enhanced | Targets 'About Us' pages. |
-| **Wizard** | Screen 2 (Deep Dive) | ✅ Complete | ✅ Complete | ✅ Structured Output | ✅ Consultant | ✅ Enhanced | Added Fintech/Healthcare blueprints. |
+| **Wizard** | Screen 1 (Context) | ✅ Complete | ✅ Complete | ✅ Search Grounding | ✅ Researcher + Analyst | ✅ Enhanced | Targets 'About Us' pages. Added Fashion Retail. |
+| **Wizard** | Screen 2 (Deep Dive) | ✅ Complete | ✅ Complete | ✅ Structured Output | ✅ Consultant | ✅ Enhanced | Added Fashion Retail Blueprint. |
 | **Wizard** | Screen 3 (Systems) | ✅ Complete | ✅ Complete | ✅ Reasoning | ✅ Architect | ✅ Edge Function | Persist selection to DB. |
 | **Wizard** | Screen 4 (Readiness) | ✅ Complete | ✅ Complete | ✅ Critical Scoring | ✅ Auditor | ✅ Edge Function | - |
 | **Wizard** | Screen 5 (Strategy) | ✅ Complete | ✅ Complete | ✅ Planning | ✅ Strategist | ✅ Edge Function | Allow user edits. |

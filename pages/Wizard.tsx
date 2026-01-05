@@ -15,7 +15,7 @@ import { Step3Systems } from '../components/wizard/Step3Systems';
 import { Step4Readiness } from '../components/wizard/Step4Readiness';
 import { Step5Strategy } from '../components/wizard/Step5Strategy';
 
-const INDUSTRIES = ['E-Commerce', 'SaaS', 'Healthcare', 'Real Estate', 'Legal Services', 'Marketing Agency', 'Manufacturing', 'Fintech', 'Other'];
+const INDUSTRIES = ['E-Commerce', 'Fashion Retail', 'SaaS', 'Healthcare', 'Real Estate', 'Legal Services', 'Marketing Agency', 'Manufacturing', 'Fintech', 'Other'];
 
 export default function Wizard() {
   const navigate = useNavigate();
