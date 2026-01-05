@@ -1,23 +1,21 @@
 
-import { getFunctionUrl, getAuthHeaders } from "../client";
+import { streamRequest } from "../client";
 import { BusinessProfile, StrategyPhase } from "../../../types";
 
-export const generateStrategy = async (profile: BusinessProfile, systems: string[]): Promise<StrategyPhase[]> => {
+export const generateStrategy = async (
+  profile: BusinessProfile, 
+  systems: string[],
+  onChunk?: (text: string) => void
+): Promise<StrategyPhase[]> => {
   try {
-    const response = await fetch(getFunctionUrl('generate-strategy'), {
-      method: 'POST',
-      headers: getAuthHeaders(),
-      body: JSON.stringify({
+    return await streamRequest<StrategyPhase[]>(
+      'generate-strategy',
+      {
         profile,
         systems
-      })
-    });
-
-    if (!response.ok) {
-      throw new Error(`Status ${response.status}`);
-    }
-
-    return await response.json();
+      },
+      onChunk
+    );
   } catch (e) {
     console.warn("Backend unavailable, using local intelligence (Demo Mode)");
 

@@ -9,10 +9,11 @@ interface Step2DeepDiveProps {
   answers: Record<string, string[]>;
   setAnswers: React.Dispatch<React.SetStateAction<Record<string, any>>>;
   onNext: () => void;
+  onBack: () => void;
   loading: boolean;
 }
 
-export const Step2DeepDive: React.FC<Step2DeepDiveProps> = ({ questions, answers, setAnswers, onNext, loading }) => {
+export const Step2DeepDive: React.FC<Step2DeepDiveProps> = ({ questions, answers, setAnswers, onNext, onBack, loading }) => {
   
   const handleSelect = (qId: string, option: string, type: 'single' | 'multi' | 'slider') => {
     const current = answers[qId] || [];
@@ -74,8 +75,11 @@ export const Step2DeepDive: React.FC<Step2DeepDiveProps> = ({ questions, answers
         </div>
       ))}
       
-      <div className="pt-8 border-t border-slate-200">
-        <Button loading={loading} onClick={onNext} className="w-full text-lg py-4">
+      <div className="pt-8 border-t border-slate-200 flex gap-4">
+        <Button variant="outline" onClick={onBack} disabled={loading} className="w-1/3 text-lg py-4">
+          Back
+        </Button>
+        <Button loading={loading} onClick={onNext} className="flex-1 text-lg py-4">
           Continue to System Selection <ArrowRight className="w-5 h-5 ml-2" />
         </Button>
       </div>

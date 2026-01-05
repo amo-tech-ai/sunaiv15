@@ -53,3 +53,51 @@ export const getAuthHeaders = () => {
   
   return headers;
 };
+
+/**
+ * Helper to handle streaming responses from Supabase Edge Functions.
+ * Reads the stream chunks, triggers the callback, and returns the parsed JSON at the end.
+ */
+export const streamRequest = async <T>(
+  endpoint: string,
+  body: any,
+  onChunk?: (chunk: string) => void
+): Promise<T> => {
+  const response = await fetch(getFunctionUrl(endpoint), {
+    method: 'POST',
+    headers: getAuthHeaders(),
+    body: JSON.stringify(body)
+  });
+
+  if (!response.ok) {
+    // If error, try to get text error
+    const errText = await response.text();
+    throw new Error(`Status ${response.status}: ${errText}`);
+  }
+
+  if (!response.body) throw new Error("No response body");
+
+  const reader = response.body.getReader();
+  const decoder = new TextDecoder();
+  let fullText = '';
+
+  while (true) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    
+    const chunk = decoder.decode(value, { stream: true });
+    fullText += chunk;
+    
+    if (onChunk) {
+      onChunk(chunk);
+    }
+  }
+  
+  // Try to parse the accumulated text as JSON
+  try {
+    return JSON.parse(fullText) as T;
+  } catch (e) {
+    console.error("Failed to parse streamed JSON", fullText);
+    throw new Error("Invalid JSON response from stream");
+  }
+};

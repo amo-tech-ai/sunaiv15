@@ -1,23 +1,21 @@
 
-import { getFunctionUrl, getAuthHeaders } from "../client";
+import { streamRequest } from "../client";
 import { BusinessProfile, BusinessAnalysis, BottleneckQuestion } from "../../../types";
 
-export const generateQuestions = async (analysis: BusinessAnalysis, profile: BusinessProfile): Promise<BottleneckQuestion[]> => {
+export const generateQuestions = async (
+  analysis: BusinessAnalysis, 
+  profile: BusinessProfile,
+  onChunk?: (text: string) => void
+): Promise<BottleneckQuestion[]> => {
   try {
-    const response = await fetch(getFunctionUrl('generate-questions'), {
-      method: 'POST',
-      headers: getAuthHeaders(),
-      body: JSON.stringify({
+    return await streamRequest<BottleneckQuestion[]>(
+      'generate-questions',
+      {
         analysis,
         profile
-      })
-    });
-
-    if (!response.ok) {
-      throw new Error(`Status ${response.status}`);
-    }
-
-    return await response.json();
+      },
+      onChunk
+    );
   } catch (e) {
     console.warn("Backend unavailable, using local intelligence (Demo Mode)");
     

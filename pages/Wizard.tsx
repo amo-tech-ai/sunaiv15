@@ -23,6 +23,7 @@ export default function Wizard() {
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
   const [loadingText, setLoadingText] = useState("");
+  const [streamData, setStreamData] = useState("");
 
   // Data State
   const [profile, setProfile] = useState<BusinessProfile>({ fullName: '', companyName: '', industry: '', description: '', website: '' });
@@ -36,20 +37,33 @@ export default function Wizard() {
 
   // --- Handlers ---
 
+  const handleBack = () => {
+    if (step > 1) {
+      setStep(step - 1);
+    }
+  };
+
+  const handleStreamChunk = (chunk: string) => {
+    setStreamData(prev => prev + chunk);
+  };
+
   const handleStep1 = async () => {
     if (!profile.fullName || !profile.companyName || !profile.industry || !profile.description) return;
     setLoading(true);
     setLoadingText("Analyzing your business...");
+    setStreamData("");
     
+    // UI Loading simulation for UX, still runs alongside stream
     const timer1 = setTimeout(() => setLoadingText("Researching your industry via Google..."), 1500);
     const timer2 = setTimeout(() => setLoadingText("Identifying key growth signals..."), 3500);
 
     try {
-      const result = await analyzeBusiness(profile);
+      const result = await analyzeBusiness(profile, handleStreamChunk);
       setAnalysis(result);
       
       setLoadingText("Generating deep-dive questions...");
-      const qs = await generateQuestions(result, profile);
+      setStreamData(""); // Reset for next call
+      const qs = await generateQuestions(result, profile, handleStreamChunk);
       setQuestions(qs);
       
       setStep(2);
@@ -60,14 +74,16 @@ export default function Wizard() {
       clearTimeout(timer2);
       setLoading(false);
       setLoadingText("");
+      setStreamData("");
     }
   };
 
   const handleStep2 = async () => {
     setLoading(true);
     setLoadingText("Mapping AI systems to your needs...");
+    setStreamData("");
     try {
-        const recs = await recommendSystems(analysis?.detectedIndustry || profile.industry, answers);
+        const recs = await recommendSystems(analysis?.detectedIndustry || profile.industry, answers, handleStreamChunk);
         setSystems(recs);
         // Auto-select recommended
         setSelectedSystems(recs.filter(r => r.isRecommended).map(r => r.id));
@@ -76,6 +92,7 @@ export default function Wizard() {
         console.error(e);
     } finally {
         setLoading(false);
+        setStreamData("");
     }
   };
 
@@ -83,30 +100,34 @@ export default function Wizard() {
     if (selectedSystems.length === 0) return;
     setLoading(true);
     setLoadingText("Checking implementation readiness...");
+    setStreamData("");
     try {
         const selectedSystemNames = systems.filter(s => selectedSystems.includes(s.id)).map(s => s.title);
-        const assessment = await assessReadiness(profile, selectedSystemNames);
+        const assessment = await assessReadiness(profile, selectedSystemNames, handleStreamChunk);
         setReadiness(assessment);
         setStep(4);
     } catch (e) {
         console.error(e);
     } finally {
         setLoading(false);
+        setStreamData("");
     }
   };
 
   const handleStep4 = async () => {
     setLoading(true);
     setLoadingText("Architecting execution plan...");
+    setStreamData("");
     try {
         const selectedSystemNames = systems.filter(s => selectedSystems.includes(s.id)).map(s => s.title);
-        const plan = await generateStrategy(profile, selectedSystemNames);
+        const plan = await generateStrategy(profile, selectedSystemNames, handleStreamChunk);
         setStrategy(plan);
         setStep(5);
     } catch (e) {
         console.error(e);
     } finally {
         setLoading(false);
+        setStreamData("");
     }
   };
 
@@ -136,7 +157,7 @@ export default function Wizard() {
   return (
     <WizardLayout
       leftPanel={<LeftPanel step={step} profile={profile} analysis={analysis} />}
-      rightPanel={<RightPanel step={step} loading={loading} loadingText={loadingText} analysis={analysis} />}
+      rightPanel={<RightPanel step={step} loading={loading} loadingText={loadingText} analysis={analysis} streamData={streamData} />}
     >
       {/* Mobile Step Indicator */}
       <div className="lg:hidden mb-8">
@@ -174,6 +195,7 @@ export default function Wizard() {
           answers={answers} 
           setAnswers={setAnswers} 
           onNext={handleStep2} 
+          onBack={handleBack}
           loading={loading} 
         />
       )}
@@ -184,6 +206,7 @@ export default function Wizard() {
           selectedSystems={selectedSystems} 
           setSelectedSystems={setSelectedSystems} 
           onNext={handleStep3} 
+          onBack={handleBack}
           loading={loading} 
         />
       )}
@@ -192,6 +215,7 @@ export default function Wizard() {
         <Step4Readiness 
           readiness={readiness} 
           onNext={handleStep4} 
+          onBack={handleBack}
           loading={loading} 
         />
       )}
@@ -200,6 +224,7 @@ export default function Wizard() {
         <Step5Strategy 
           strategy={strategy} 
           onFinish={handleFinish}
+          onBack={handleBack}
           loading={loading}
         />
       )}

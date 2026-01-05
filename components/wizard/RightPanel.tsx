@@ -1,17 +1,27 @@
 
-import React from 'react';
+import React, { useRef, useEffect } from 'react';
 import { Card, Badge } from '../ui';
 import { BusinessAnalysis } from '../../types';
-import { Loader2, Sparkles, Search, Briefcase, Layers, Lightbulb, Target, ShieldCheck, Check } from 'lucide-react';
+import { Loader2, Sparkles, Search, Briefcase, Layers, Lightbulb, Target, ShieldCheck, Check, Terminal } from 'lucide-react';
 
 interface RightPanelProps {
   step: number;
   loading: boolean;
   loadingText: string;
   analysis: BusinessAnalysis | null;
+  streamData?: string;
 }
 
-export const RightPanel: React.FC<RightPanelProps> = ({ step, loading, loadingText, analysis }) => {
+export const RightPanel: React.FC<RightPanelProps> = ({ step, loading, loadingText, analysis, streamData }) => {
+  const terminalRef = useRef<HTMLDivElement>(null);
+
+  // Auto-scroll terminal
+  useEffect(() => {
+    if (terminalRef.current) {
+      terminalRef.current.scrollTop = terminalRef.current.scrollHeight;
+    }
+  }, [streamData]);
+
   return (
     <div className="hidden xl:flex flex-col border-l border-slate-200 bg-white w-96 h-full p-8 flex-shrink-0 overflow-y-auto">
       <div className="flex items-center gap-2 text-brand-600 mb-8">
@@ -21,14 +31,16 @@ export const RightPanel: React.FC<RightPanelProps> = ({ step, loading, loadingTe
 
       {loading ? (
         <div className="flex flex-col h-full animate-fade-in">
-           {step === 1 ? (
-             <div className="space-y-6">
-                <div className="flex items-center gap-3 mb-6">
-                   <Loader2 className="w-5 h-5 text-brand-500 animate-spin" />
-                   <span className="text-sm font-semibold text-slate-900">Analyzing your business...</span>
-                </div>
-                {/* Simulated Analysis Steps */}
-                <div className="space-y-4 pl-2">
+           {/* Primary Loading State */}
+           <div className="mb-8">
+             <div className="flex items-center gap-3 mb-4">
+                <Loader2 className="w-5 h-5 text-brand-500 animate-spin" />
+                <span className="text-sm font-semibold text-slate-900">{loadingText || "Processing..."}</span>
+             </div>
+             
+             {/* Simulated Steps Visuals for Step 1 */}
+             {step === 1 && (
+               <div className="space-y-4 pl-2 mb-6 border-l-2 border-slate-100 ml-2">
                    <div className="flex items-center gap-3 text-sm text-slate-600">
                       <div className={`w-2 h-2 rounded-full ${loadingText.includes("Researching") || loadingText.includes("Identifying") ? 'bg-brand-500' : 'bg-slate-300 animate-pulse'}`} />
                       <span>Detecting industry context</span>
@@ -37,24 +49,29 @@ export const RightPanel: React.FC<RightPanelProps> = ({ step, loading, loadingTe
                       <div className={`w-2 h-2 rounded-full ${loadingText.includes("Identifying") ? 'bg-brand-500' : 'bg-slate-300'}`} />
                       <span>Reviewing digital footprint</span>
                    </div>
-                   <div className="flex items-center gap-3 text-sm text-slate-600">
-                      <div className={`w-2 h-2 rounded-full ${loadingText.includes("Identifying") ? 'bg-brand-500' : 'bg-slate-300'}`} />
-                      <span>Identifying growth signals</span>
-                   </div>
-                </div>
+               </div>
+             )}
+           </div>
+
+           {/* Live Agent Terminal */}
+           <div className="flex-1 bg-slate-900 rounded-xl p-4 font-mono text-xs overflow-hidden flex flex-col shadow-inner">
+             <div className="flex items-center gap-2 border-b border-slate-800 pb-2 mb-2 text-slate-500">
+               <Terminal className="w-3 h-3" />
+               <span className="uppercase tracking-wider text-[10px]">Agent Stream</span>
              </div>
-           ) : (
-             <div className="flex flex-col items-center justify-center h-64 text-center px-4">
-              <div className="relative mb-6">
-                <div className="absolute inset-0 bg-brand-100 rounded-full animate-ping opacity-75"></div>
-                <div className="relative bg-white p-3 rounded-full border border-brand-100 shadow-sm">
-                  <Loader2 className="w-8 h-8 text-brand-500 animate-spin" />
-                </div>
-              </div>
-              <p className="text-sm text-slate-900 font-medium mb-1">{loadingText}</p>
-              <p className="text-xs text-slate-400">Processing real-time insights...</p>
-            </div>
-           )}
+             <div ref={terminalRef} className="flex-1 overflow-y-auto text-emerald-400 space-y-1 break-all whitespace-pre-wrap">
+               {streamData ? (
+                 <>
+                   <span className="opacity-50">{"> Initializing Gemini 3..."}</span><br/>
+                   <span className="opacity-50">{"> Connecting to Edge Runtime..."}</span><br/>
+                   {streamData}
+                   <span className="animate-pulse">_</span>
+                 </>
+               ) : (
+                 <span className="text-slate-600 italic">Waiting for stream...</span>
+               )}
+             </div>
+           </div>
         </div>
       ) : (
         <div className="space-y-8 animate-fade-in">

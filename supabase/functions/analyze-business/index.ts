@@ -1,3 +1,4 @@
+
 import "jsr:@supabase/functions-js/edge-runtime.d.ts"
 import { GoogleGenAI, Type } from "npm:@google/genai@^1.0.0"
 import process from "node:process"
@@ -43,8 +44,8 @@ Deno.serve(async (req: any) => {
       Provide 3 key strategic observations.
     `
 
-    // Uses gemini-3-flash-preview for low latency + search capability
-    const response = await ai.models.generateContent({
+    // Streaming response setup
+    const response = await ai.models.generateContentStream({
       model: 'gemini-3-flash-preview',
       contents: prompt,
       config: {
@@ -54,10 +55,25 @@ Deno.serve(async (req: any) => {
       }
     });
 
-    const result = JSON.parse(response.text || "{}");
+    const stream = new ReadableStream({
+      async start(controller) {
+        try {
+          for await (const chunk of response.stream) {
+            const text = chunk.text();
+            if (text) {
+              controller.enqueue(new TextEncoder().encode(text));
+            }
+          }
+        } catch (e) {
+          console.error("Stream error", e);
+          controller.error(e);
+        }
+        controller.close();
+      },
+    });
 
-    return new Response(JSON.stringify(result), {
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    return new Response(stream, {
+      headers: { ...corsHeaders, 'Content-Type': 'text/plain; charset=utf-8' },
     })
 
   } catch (error: any) {

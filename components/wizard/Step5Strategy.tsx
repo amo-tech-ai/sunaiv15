@@ -7,10 +7,11 @@ import { Calendar, CheckSquare, ArrowRight, Rocket, PlayCircle } from 'lucide-re
 interface Step5StrategyProps {
   strategy: StrategyPhase[];
   onFinish: () => void;
+  onBack: () => void;
   loading?: boolean;
 }
 
-export const Step5Strategy: React.FC<Step5StrategyProps> = ({ strategy, onFinish, loading }) => {
+export const Step5Strategy: React.FC<Step5StrategyProps> = ({ strategy, onFinish, onBack, loading }) => {
   return (
     <div className="space-y-8 animate-fade-in pb-12">
       <div className="relative">
@@ -84,15 +85,18 @@ export const Step5Strategy: React.FC<Step5StrategyProps> = ({ strategy, onFinish
       </div>
 
       <div className="fixed bottom-0 left-0 right-0 p-4 bg-white/80 backdrop-blur-md border-t border-slate-200 lg:static lg:bg-transparent lg:border-none lg:p-0">
-         <div className="max-w-2xl mx-auto lg:mx-0">
-            <Button onClick={onFinish} className="w-full bg-slate-900 hover:bg-slate-800 text-white text-lg py-4 shadow-xl shadow-slate-900/10">
+         <div className="max-w-2xl mx-auto lg:mx-0 flex gap-4">
+            <Button variant="outline" onClick={onBack} disabled={loading} className="w-1/3 text-lg py-4 bg-white">
+              Back
+            </Button>
+            <Button onClick={onFinish} className="flex-1 bg-slate-900 hover:bg-slate-800 text-white text-lg py-4 shadow-xl shadow-slate-900/10">
               <Rocket className="w-5 h-5 mr-2" /> 
               Approve Plan & Launch Dashboard
             </Button>
-            <p className="text-center text-xs text-slate-400 mt-3">
-              By launching, you agree to the 90-day execution roadmap.
-            </p>
          </div>
+         <p className="text-center text-xs text-slate-400 mt-3">
+            By launching, you agree to the 90-day execution roadmap.
+         </p>
       </div>
     </div>
   );

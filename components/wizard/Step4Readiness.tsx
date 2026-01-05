@@ -7,10 +7,11 @@ import { ArrowRight, AlertTriangle, CheckCircle2, BarChart3, Database, Users, Se
 interface Step4ReadinessProps {
   readiness: ReadinessAssessment | null;
   onNext: () => void;
+  onBack: () => void;
   loading: boolean;
 }
 
-export const Step4Readiness: React.FC<Step4ReadinessProps> = ({ readiness, onNext, loading }) => {
+export const Step4Readiness: React.FC<Step4ReadinessProps> = ({ readiness, onNext, onBack, loading }) => {
   if (!readiness) return null;
 
   const getScoreColor = (score: number) => {
@@ -109,8 +110,11 @@ export const Step4Readiness: React.FC<Step4ReadinessProps> = ({ readiness, onNex
         </div>
       </div>
 
-      <div className="pt-4">
-        <Button loading={loading} onClick={onNext} className="w-full text-lg py-4">
+      <div className="pt-4 flex gap-4">
+        <Button variant="outline" onClick={onBack} disabled={loading} className="w-1/3 text-lg py-4">
+          Back
+        </Button>
+        <Button loading={loading} onClick={onNext} className="flex-1 text-lg py-4">
           Generate Strategy <ArrowRight className="w-5 h-5 ml-2" />
         </Button>
       </div>

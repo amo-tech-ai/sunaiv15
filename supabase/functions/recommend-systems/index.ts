@@ -1,3 +1,4 @@
+
 import "jsr:@supabase/functions-js/edge-runtime.d.ts"
 import { GoogleGenAI, Type } from "npm:@google/genai@^1.0.0"
 import process from "node:process"
@@ -34,8 +35,7 @@ Deno.serve(async (req: any) => {
       }
     };
 
-    // Uses gemini-3-pro-preview with thinking budget to map problems to systems
-    const response = await ai.models.generateContent({
+    const response = await ai.models.generateContentStream({
       model: 'gemini-3-pro-preview',
       contents: `Recommend 5 AI/Business systems for a ${industry} company dealing with: ${JSON.stringify(bottlenecks)}. Mark 2-3 as recommended.`,
       config: {
@@ -45,8 +45,25 @@ Deno.serve(async (req: any) => {
       }
     });
 
-    return new Response(response.text, {
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    const stream = new ReadableStream({
+      async start(controller) {
+        try {
+          for await (const chunk of response.stream) {
+            const text = chunk.text();
+            if (text) {
+              controller.enqueue(new TextEncoder().encode(text));
+            }
+          }
+        } catch (e) {
+          console.error("Stream error", e);
+          controller.error(e);
+        }
+        controller.close();
+      },
+    });
+
+    return new Response(stream, {
+      headers: { ...corsHeaders, 'Content-Type': 'text/plain; charset=utf-8' },
     })
   } catch (error: any) {
     return new Response(JSON.stringify({ error: error.message }), { status: 500, headers: corsHeaders })

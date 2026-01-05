@@ -9,10 +9,11 @@ interface Step3SystemsProps {
   selectedSystems: string[];
   setSelectedSystems: React.Dispatch<React.SetStateAction<string[]>>;
   onNext: () => void;
+  onBack: () => void;
   loading: boolean;
 }
 
-export const Step3Systems: React.FC<Step3SystemsProps> = ({ systems, selectedSystems, setSelectedSystems, onNext, loading }) => {
+export const Step3Systems: React.FC<Step3SystemsProps> = ({ systems, selectedSystems, setSelectedSystems, onNext, onBack, loading }) => {
   
   const handleToggleSystem = (sysId: string) => {
     if (loading) return;
@@ -121,12 +122,15 @@ export const Step3Systems: React.FC<Step3SystemsProps> = ({ systems, selectedSys
         </div>
       )}
 
-      <div className="pt-6 border-t border-slate-200">
+      <div className="pt-6 border-t border-slate-200 flex gap-4">
+        <Button variant="outline" onClick={onBack} disabled={loading} className="w-1/3 text-lg py-4">
+          Back
+        </Button>
         <Button 
           loading={loading} 
           onClick={onNext} 
           disabled={selectedSystems.length === 0} 
-          className="w-full text-lg py-4"
+          className="flex-1 text-lg py-4"
         >
           Review Readiness <ArrowRight className="w-5 h-5 ml-2" />
         </Button>
