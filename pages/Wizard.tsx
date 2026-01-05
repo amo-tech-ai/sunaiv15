@@ -50,12 +50,12 @@ export default function Wizard() {
   const handleStep1 = async () => {
     if (!profile.fullName || !profile.companyName || !profile.industry || !profile.description) return;
     setLoading(true);
-    setLoadingText("Analyzing your business...");
+    setLoadingText("Reading your website...");
     setStreamData("");
     
     // UI Loading simulation for UX, still runs alongside stream
-    const timer1 = setTimeout(() => setLoadingText("Researching your industry via Google..."), 1500);
-    const timer2 = setTimeout(() => setLoadingText("Identifying key growth signals..."), 3500);
+    const timer1 = setTimeout(() => setLoadingText("Analyzing business model..."), 2000);
+    const timer2 = setTimeout(() => setLoadingText("Verifying industry context..."), 4500);
 
     try {
       const result = await analyzeBusiness(profile, handleStreamChunk);
@@ -143,11 +143,44 @@ export default function Wizard() {
   // --- Header/Title Logic ---
   const getHeaderContent = () => {
     switch (step) {
-      case 1: return { title: "Tell us about your business", sub: "We use this to understand your business and design a practical AI plan." };
-      case 2: return { title: "Identify Business Bottlenecks", sub: "Let's identify where we can increase revenue, reduce costs, and save time." };
-      case 3: return { title: "Architect your system", sub: "Select systems based on problems, not tools." };
-      case 4: return { title: "Readiness Check", sub: "Set expectations and build trust." };
-      case 5: return { title: "Your Execution Plan", sub: "Turn insight into a concrete plan." };
+      case 1: 
+        return { 
+          title: "Tell us about your business", 
+          sub: "We use this to understand your business and design a practical AI plan." 
+        };
+      case 2:
+        const industry = analysis?.detectedIndustry?.toLowerCase() || '';
+        let title = "What is the biggest barrier to growing your business?";
+        
+        if (industry.includes('fashion') || industry.includes('e-com') || industry.includes('retail')) {
+          title = "What’s slowing down your sales and content growth?";
+        } else if (industry.includes('real estate')) {
+          title = "Where are deals getting stuck or delayed?";
+        } else if (industry.includes('travel') || industry.includes('hospitality')) {
+          title = "What’s limiting bookings and operational scale?";
+        } else if (industry.includes('agency') || industry.includes('services') || industry.includes('marketing')) {
+          title = "What’s holding your growth back right now?";
+        }
+        
+        return { 
+          title: title, 
+          sub: "Let's pinpoint the biggest issues so we can fix the right things first." 
+        };
+      case 3: 
+        return { 
+          title: "Architect your system", 
+          sub: "Select systems based on problems, not tools." 
+        };
+      case 4: 
+        return { 
+          title: "Readiness Check", 
+          sub: "Set expectations and build trust." 
+        };
+      case 5: 
+        return { 
+          title: "Your Execution Plan", 
+          sub: "Turn insight into a concrete plan." 
+        };
       default: return { title: "", sub: "" };
     }
   };

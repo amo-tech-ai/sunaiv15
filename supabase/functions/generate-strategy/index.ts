@@ -34,9 +34,34 @@ Deno.serve(async (req: any) => {
         }
     };
 
+    const prompt = `
+      ROLE:
+      You are a Senior Project Manager. You organize work into logical phases to ensure successful delivery.
+
+      INPUTS:
+      - Company: ${profile.companyName} (${profile.description})
+      - Selected Systems: ${systems.join(', ')}
+
+      INSTRUCTIONS:
+      1. **Sequence the Work (3 Phases):**
+         - **Phase 1 (Foundation):** Must address "Critical Gaps" (e.g., Data Cleanup, Setup).
+         - **Phase 2 (Implementation):** Deploy the core "Recommended" systems.
+         - **Phase 3 (Optimization):** Scale, reporting, and advanced features.
+
+      2. **Estimate Timelines:**
+         - Be conservative. Double the standard timelines if maturity looks low.
+         - Format: "X-Y Weeks".
+
+      3. **Define Deliverables:**
+         - For each phase, list 3-4 tangible assets (e.g., "CRM Integration", "Playbook PDF", "Live Agent").
+
+      OUTPUT:
+      - Return valid JSON matching the schema.
+    `;
+
     const response = await ai.models.generateContentStream({
       model: 'gemini-3-pro-preview',
-      contents: `Create a 3-phase implementation strategy for ${profile.companyName} implementing ${systems.join(', ')}.`,
+      contents: prompt,
       config: {
         responseMimeType: "application/json",
         responseSchema: schema,

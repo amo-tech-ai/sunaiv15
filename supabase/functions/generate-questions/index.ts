@@ -20,64 +20,7 @@ Deno.serve(async (req: any) => {
 
     const { analysis, profile } = await req.json()
 
-    // 1. Definition of Industry Blueprints (The "Ground Truth")
-    const blueprints = `
-      1. Startups & SaaS
-      Context: High growth pressure, churn sensitivity, CAC/LTV focus.
-      - Business Focus: Barrier to ARR growth (Lead Vol, Conversion, Churn, ACV).
-      - Operational Friction: Manual work (Support Tickets, Onboarding, CRM Entry, Debugging).
-      - Speed: Growth loops (Content Production, Feature Launches, Sales Cycles, Data Silos).
-
-      2. E-Commerce & Retail
-      Context: Inventory, margins, returns, omnichannel.
-      - Business Focus: Margin killers (CAC, AOV, Returns, Cart Abandonment).
-      - Operational Friction: Time sinks (Inventory/SKU, CS Orders, Refunds, Product Uploads).
-      - Speed: Campaign velocity (Creative Prod, Influencer Coord, Ad Testing, Agency Turnaround).
-
-      3. Agencies & Professional Services (including Legal, Marketing)
-      Context: Billable hours, utilization, feast/famine.
-      - Business Focus: Scaling block (Lead Flow, Founder Selling, LTV, Margins).
-      - Operational Friction: Non-billable time (Reporting, Proposals, Onboarding, Invoicing).
-      - Speed: Delivery bottlenecks (QA/Review, Client Delays, Resourcing, Hiring).
-
-      4. Real Estate
-      Context: Speed-to-lead, transaction coordination, local presence.
-      - Business Focus: Deal loss (Speed to Lead, Nurturing Cold Leads, New Listings, Referrals).
-      - Operational Friction: Admin (Transaction Coord, Showings, CRM Updates, Marketing Flyers).
-      - Speed: Closing speed (Signatures, Vendor Coord, Client Comms, Market Research).
-
-      5. Fintech
-      Context: Compliance, trust, user acquisition, transaction volume.
-      - Business Focus: User trust (Security), CAC, Transaction volume, Fraud rates.
-      - Operational Friction: KYC/AML checks, Customer support (sensitive), Reconciliation, Compliance reporting.
-      - Speed: Feature rollout vs Compliance, Settlement speed.
-
-      6. Healthcare
-      Context: Patient care, privacy (HIPAA), admin burden.
-      - Business Focus: Patient volume, Billing efficiency, Care quality, No-show rates.
-      - Operational Friction: EMR data entry, Appointment scheduling, Insurance claims, Transcription.
-      - Speed: Patient intake, Diagnosis support, Lab result processing.
-
-      7. Manufacturing
-      Context: Supply chain, production efficiency, margins, safety.
-      - Business Focus: Output efficiency, Supply chain resilience, Order accuracy, Yield rates.
-      - Operational Friction: Quality control, Inventory tracking, Machine maintenance, Shift scheduling.
-      - Speed: Production cycles, Quote-to-cash, Prototype to production.
-
-      8. Fashion Retail
-      Context: Seasonality, high return rates (sizing), visual content intensity, trend cycles.
-      - Business Focus: Profitability leaks (Returns reduction, Dead stock markdowns, CAC/Ad efficiency).
-      - Operational Friction: Visual Content Production (Lookbooks/Social), Returns Management (Reverse logistics), Multi-channel Inventory Sync.
-      - Speed: Concept-to-Shelf velocity, Restocking best-sellers, Launching new collections.
-      
-      9. General / Other / Unsure
-      Context: Fundamental business health.
-      - Business Focus: Revenue blocker (New Leads, Closing Deals, Repeat Business, Pricing).
-      - Operational Friction: Manual admin (Data Entry, Scheduling, Email/Comms, Paperwork).
-      - Speed: Project completion (Decision Making, Resource Availability, Process Clarity, Tech Issues).
-    `;
-
-    // 2. Updated Schema with system_hint
+    // Schema matching BottleneckQuestion interface
     const schema = {
       type: Type.ARRAY,
       items: {
@@ -105,38 +48,38 @@ Deno.serve(async (req: any) => {
     };
 
     const prompt = `
-      You are an expert Industry Consultant. Your goal is to diagnose business bottlenecks.
-      
-      INPUT CONTEXT:
-      Industry: ${analysis.detectedIndustry} (Confidence: ${analysis.detectedIndustry === 'Other' ? 'Low' : 'High'})
-      Model: ${analysis.businessModel}
-      Description: ${profile.description}
+      ROLE:
+      You are a Senior Industry Consultant. You are interviewing a business owner to find their most expensive problems.
+
+      CONTEXT:
+      - Industry: ${analysis.detectedIndustry}
+      - Model: ${analysis.businessModel}
+      - Readiness: ${analysis.digitalReadiness}
+      - Description: ${profile.description}
 
       INSTRUCTIONS:
-      1. Analyze the input industry: '${analysis.detectedIndustry}'.
-      
-      2. CLARIFICATION RULE: 
-         If the industry is generic (e.g., 'Technology', 'Services', 'Other', 'Business', 'Consulting') OR if you are unsure of the specific niche, 
-         Question 1 MUST be a Clarifying Question.
-         Text: "Which specific model best describes your business?"
-         Options: Provide 4 distinct business model options relevant to the generic category (e.g., "SaaS", "Agency", "Marketplace", "Consulting Firm").
-         System Hint: Use 'model_identification' for these options.
-      
-      3. OTHERWISE (if industry is specific):
-         Match it to the closest Blueprint: [SaaS, E-Commerce, Fashion Retail, Agency, Real Estate, Fintech, Healthcare, Manufacturing].
-         Generate 4 questions based on the Blueprint structure:
-         - Question 1 (Business Focus): Revenue/Growth bottlenecks.
-         - Question 2 (Operational Friction): Manual work/Time sinks.
-         - Question 3 (Speed to Execution): Velocity blockers.
-         - Question 4 (Priority): The "North Star" fix.
+      1. **Analyze the Industry:**
+         - Identify the specific "currency" of this industry (e.g., Agencies = Hours, Retail = Inventory/Margins, SaaS = MRR/Churn).
+         - Retrieve the specific jargon used by experts in this field.
 
-      4. CRITICAL RULES:
-         - Use industry jargon (e.g., "KYC" for Fintech, "EMR" for Healthcare, "SKU" for Retail, "Billable Hours" for Agencies, "Dead Stock" for Fashion).
-         - 'system_hint' tags MUST be snake_case and imply a specific software solution category (e.g. 'kyc_auto', 'inventory_sync', 'lead_scoring_ai', 'predictive_maintenance', 'returns_processing', 'content_creation_ai'). 
-         - Do not use generic tags like 'growth' or 'ops'. Be specific: 'invoice_processing', 'fraud_detection', 'patient_scheduling_ai'.
+      2. **Generate 4 Diagnostic Sections:**
+         - **Section 1 (Growth):** Ask about the biggest revenue blocker. Options MUST be specific outcomes (e.g., "Reduce Cart Abandonment" vs "Get more sales").
+         - **Section 2 (Time):** Ask about manual work. Describe the actual task (e.g., "Manually copy-pasting leads").
+         - **Section 3 (Velocity):** Ask how long a key action takes (e.g., "Launching a campaign").
+         - **Section 4 (Priority):** Ask for the "North Star" goal.
 
-      REFERENCE BLUEPRINTS:
-      ${blueprints}
+      3. **Map to Systems (Crucial):**
+         - For every option provided, assign a 'system_hint' tag in snake_case.
+         - This tag determines which software we recommend in the next step.
+         - Examples: 'lead_gen_ai', 'inventory_prediction', 'support_autobot'.
+
+      NEGATIVE CONSTRAINTS:
+      - NEVER use the words: "bottleneck", "friction", "optimization", "landscape", "leverage".
+      - Instead of "Operational Friction", ask "Where is time wasted?".
+      - Instead of "Business Focus", ask "What is slowing growth?".
+
+      OUTPUT:
+      - Return valid JSON matching the schema.
     `
 
     const response = await ai.models.generateContentStream({

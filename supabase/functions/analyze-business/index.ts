@@ -32,17 +32,31 @@ Deno.serve(async (req: any) => {
     };
 
     const prompt = `
-      Analyze this business:
-      Name: ${company_name}
-      URL: ${website_url || 'Not provided'}
-      Self-described Industry: ${industry_hint}
-      Description: ${description}
+      ROLE:
+      You are an expert Market Researcher and Business Analyst. Your job is to verify a company's existence and analyze its business model using real-time web data.
+
+      INPUTS:
+      - Company Name: ${company_name}
+      - Website: ${website_url || 'Not provided'}
+      - User Description: ${description}
+      - Industry Hint: ${industry_hint}
 
       INSTRUCTIONS:
-      1. Use Google Search to verify the company. 
-      2. If a URL is provided, specifically search for and analyze their 'About Us' and 'Products/Services' pages to extract specific industry keywords and actual offerings.
-      3. Infer the specific industry niche (be precise, e.g., "Fintech - Payment Processing" instead of just "Fintech" or "Technology"), their primary business model (B2B/B2C/etc), and their apparent digital maturity.
-      4. Provide 3 key strategic observations based on their specific product features or service claims found in the search results.
+      1. **Verification (Google Search):**
+         - If a URL is provided, search specifically for the "About Us", "Pricing", and "Services" pages of that domain to extract ground truth.
+         - If NO URL is provided, search the Company Name + Industry Hint to find the most likely entity.
+
+      2. **Analysis:**
+         - **Industry Classification:** Do not use generic tags like "Retail". Be specific. (e.g., "Fashion E-Commerce", "B2B SaaS - Fintech", "Local Service - HVAC").
+         - **Business Model:** Infer the primary model (B2B, B2C, Marketplace, Agency).
+         - **Digital Readiness:** Assess their maturity based on web signals (e.g., modern stack vs legacy, active social presence vs dormant).
+
+      3. **Output Generation:**
+         - Return a JSON object matching the output schema.
+         - 'observations' must be 3 specific facts found during search, not generic statements.
+
+      FALLBACK RULES:
+      - If the company cannot be found, fallback to the User Description and mark confidence as 'Low' in internal metadata, but generate a plausible profile based on the description.
     `
 
     // Streaming response setup
@@ -53,6 +67,7 @@ Deno.serve(async (req: any) => {
         responseMimeType: "application/json",
         responseSchema: schema,
         tools: [{googleSearch: {}}],
+        temperature: 0.2
       }
     });
 

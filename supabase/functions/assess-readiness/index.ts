@@ -38,9 +38,36 @@ Deno.serve(async (req: any) => {
         }
     };
 
+    const prompt = `
+      ROLE:
+      You are a Risk Auditor. Your job is to prevent project failure by identifying gaps between the client's current state and their desired systems.
+
+      INPUTS:
+      - Current State: ${profile.industry} (Readiness: Unknown, please infer from context below)
+      - Business Context: ${profile.description}
+      - Desired Systems: ${systems.join(', ')}
+
+      INSTRUCTIONS:
+      1. **Calculate Readiness Score (0-100):**
+         - Start at 100.
+         - Deduct 20 points if digital maturity seems Low based on context and they want "Advanced AI".
+         - Deduct 10 points for every "Data Silo" risk detected.
+         - Deduct 10 points if they lack a technical team but want "Custom Engineering".
+
+      2. **Identify Critical Gaps:**
+         - If score < 80, list specific reasons why (e.g., "Your data is not centralized enough for a Predictive Dashboard").
+         - Be honest. Do not be "nice". It is better to warn them now than fail later.
+
+      3. **Identify Quick Wins:**
+         - List 2 low-effort actions to improve readiness (e.g., "Export customer list to CSV").
+
+      OUTPUT:
+      - Return valid JSON matching the schema.
+    `;
+
     const response = await ai.models.generateContentStream({
       model: 'gemini-3-pro-preview',
-      contents: `Assess readiness for implementing ${systems.join(', ')} for ${profile.companyName} (${profile.description}). Be critical but encouraging.`,
+      contents: prompt,
       config: {
         responseMimeType: "application/json",
         responseSchema: schema,

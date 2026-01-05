@@ -35,9 +35,35 @@ Deno.serve(async (req: any) => {
       }
     };
 
+    const prompt = `
+      ROLE:
+      You are a Solutions Architect. You map business problems to technical systems.
+
+      INPUTS:
+      - Industry: ${industry}
+      - User Answers Payload: ${JSON.stringify(bottlenecks)}
+
+      INSTRUCTIONS:
+      1. **Synthesize Needs:**
+         - Extract the 'system_hints' and implicit needs from the user answers.
+         - If the user selected "Manually copy-pasting", they need "Operations Autopilot".
+         - If they selected "Slow lead response", they need "Growth Engine".
+
+      2. **Select Systems:**
+         - Choose exactly 5 systems from the Standard Catalog (Growth, Operations, Intelligence, Content, Support).
+         - Mark top 2-3 as 'isRecommended: true' based on the user's highest priority pains.
+
+      3. **Justify:**
+         - Write a 1-sentence 'benefit' for each system that references the user's specific pain point.
+         - Example: "Connects your CRM to email so you stop copy-pasting data." (Direct reference).
+
+      OUTPUT:
+      - Return valid JSON matching the schema.
+    `;
+
     const response = await ai.models.generateContentStream({
       model: 'gemini-3-pro-preview',
-      contents: `Recommend 5 AI/Business systems for a ${industry} company dealing with: ${JSON.stringify(bottlenecks)}. Mark 2-3 as recommended.`,
+      contents: prompt,
       config: {
         responseMimeType: "application/json",
         responseSchema: schema,
