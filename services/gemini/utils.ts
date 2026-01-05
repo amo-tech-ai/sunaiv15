@@ -1,13 +1,7 @@
-import { apiKey } from './client';
-
 /**
  * Checks if the API key is present.
- * Logs a warning if missing to indicate mock mode.
+ * Always returns true as we use backend Edge Functions for API calls.
  */
 export const checkApiKey = (): boolean => {
-  if (!apiKey) {
-    console.warn("No API Key provided. Mocking response for demo.");
-    return false;
-  }
   return true;
 };
