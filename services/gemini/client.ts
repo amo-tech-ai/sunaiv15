@@ -44,6 +44,8 @@ export const getAuthHeaders = () => {
   
   if (SUPABASE_ANON_KEY) {
     headers['Authorization'] = `Bearer ${SUPABASE_ANON_KEY}`;
+    // The 'apikey' header is often required by the Supabase API Gateway
+    headers['apikey'] = SUPABASE_ANON_KEY;
   }
   
   return headers;
