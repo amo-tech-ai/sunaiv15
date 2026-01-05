@@ -1,202 +1,200 @@
 # Sun AI Agency Platform — Strategic Roadmap
 
-**Version:** 1.0  
-**Status:** Active  
-**Scope:** Core Setup (Wizard) + Client Delivery (Dashboard)
+**Product:** Sun AI Agency Platform  
+**Status:** Active Development  
+**Target Audience:** Founders, Agency Clients, Stakeholders
 
 ---
 
-## Progress Tracker: Core Modules
+## 🟢 Progress Tracker
 
-| Module | Feature | AI Agent | Gemini 3 Feature | Status |
-| :--- | :--- | :--- | :--- | :--- |
-| **Foundation** | Project Setup & Repo | - | - | ✅ Complete |
-| **Foundation** | UI Component Library | - | - | ✅ Complete |
-| **Foundation** | Database Schema (Supabase) | - | - | ❌ Missing |
-| **Foundation** | Auth & RLS Policies | - | - | ❌ Missing |
-| **Wizard** | Step 1: Business Analysis | **Researcher + Analyst** | Search Grounding | ✅ Complete |
-| **Wizard** | Step 2: Bottleneck Discovery | **Consultant** | Thinking Config | ✅ Complete |
-| **Wizard** | Step 3: System Mapping | **Architect** | Reasoning | ✅ Complete |
-| **Wizard** | Step 4: Readiness Check | **Auditor** | Critical Scoring | ✅ Complete |
-| **Wizard** | Step 5: Strategy Gen | **Strategist** | Planning | ✅ Complete |
-| **Dashboard** | Data Persistence (Save State) | - | - | ❌ Missing |
-| **Dashboard** | Dynamic Deliverables | **Planner** | Structured Output | ⚠️ Partial (Mock) |
-| **Dashboard** | Live Intelligence Feed | **Project Monitor** | Search + Reasoning | ⚠️ Static UI Only |
+| Module / Screen | Feature | AI Agent | Workflow Logic | Gemini 3 Features | Status |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **Foundation** | UI/UX Core | - | Responsive 3-Panel Layout | - | ✅ Complete |
+| **Foundation** | Backend Connect | - | Edge Function Client | - | ✅ Complete |
+| **Wizard Step 1** | Business Analysis | **Researcher** | Entity Verification | `googleSearch`, `gemini-3-flash` | ✅ Complete |
+| **Wizard Step 2** | Deep Dive | **Consultant** | Discovery Diagnosis | `thinkingConfig`, Context Injection | ✅ Complete |
+| **Wizard Step 3** | System Select | **Architect** | Problem-Solution Mapping | Reasoning, `gemini-3-pro` | ✅ Complete |
+| **Wizard Step 4** | Readiness | **Auditor** | Gap Analysis & Scoring | Critical Thinking (High Budget) | ✅ Complete |
+| **Wizard Step 5** | Strategy | **Strategist** | Roadmap Synthesis | Structured Outputs, Planning | ✅ Complete |
+| **Dashboard** | Project View | - | State Visualization | - | ⚠️ UI Only |
+| **Dashboard** | Deliverables | **Planner** | Task Generation | Structured Outputs | ⚠️ Partial |
+| **Dashboard** | Intelligence | **Monitor** | Live Risk Monitoring | Search Grounding (News) | ❌ Planned |
 
 ---
 
-## Gemini 3 Tools & Agents Matrix
+## 🧠 Gemini 3 Tools & Agents Matrix
 
 | AI Agent Role | Responsibility | Gemini 3 Features Used |
 | :--- | :--- | :--- |
-| **The Researcher** | Verifies entity existence & context | `googleSearch` Grounding, URL Context |
-| **The Analyst** | Infers business model & maturity | Structured Outputs (JSON) |
-| **The Consultant** | Diagnoses high-value pain points | `thinkingConfig` (Budget: 2048), Context Injection |
-| **The Architect** | Maps problems to system solutions | Reasoning, Knowledge Retrieval |
-| **The Auditor** | Validates feasibility & risks | `thinkingConfig` (Budget: 4096), Critical Scoring |
-| **The Strategist** | Plans timelines & deliverables | Temporal Reasoning, Structured Outputs |
-| **The Monitor** | Tracks project health (Post-launch) | `googleSearch` (News/Trends), RAG |
+| **The Researcher** | Verifies company existence and extracts digital signals from the web. | **Grounding with Google Search** (Veracity), **URL Context** (Analysis). |
+| **The Analyst** | Synthesizes raw data into a structured business profile. | **Structured Outputs** (JSON Schema enforcement). |
+| **The Consultant** | Generates high-value, industry-specific diagnostic questions. | **Thinking Config** (Budget: 2048) to simulate human consulting nuance. |
+| **The Architect** | Maps diagnosed pain points to optimal system architectures. | **Reasoning** (Problem-Solution mapping), **Gemini 3 Pro**. |
+| **The Auditor** | Critically assesses client readiness and flags risks. | **Thinking Config** (Budget: 4096) for rigorous "Red Teaming". |
+| **The Strategist** | Creates temporal project plans and phasing. | **Planning** capabilities, **Structured Outputs**. |
+| **The Monitor** | Continuously watches industry trends for client relevance. | **Grounding with Google Search** (News/Trends), **Interactions API**. |
 
 ---
 
-# Phase 0 — Foundation (Must-Have)
+## Phase 0 — Foundation (Must-Have)
 
-### Purpose
+**Purpose**  
 To establish the technical "bedrock" that ensures security, data persistence, and scalability. Without this, the application is just a demo.
 
-### What’s Included
+**What’s Included**
 *   **Supabase Project Setup:** Postgres Database, Auth, Edge Functions environment.
 *   **Database Schema:** Tables for `profiles`, `projects`, `assessments`, `strategies`.
 *   **Authentication:** Sign Up / Login flow (protecting dashboard routes).
 *   **Security:** Row Level Security (RLS) policies to ensure clients only see their own data.
 *   **Environment Config:** Secure handling of `API_KEY` and Supabase secrets.
 
-### What’s Explicitly NOT Included
+**What’s Explicitly NOT Included**
 *   Any AI generation (logic is handled in Phase 1).
 *   Fancy UI animations.
 
-### Gemini 3 Features Used
+**Gemini 3 Features Used**
 *   *None in this phase (Infrastructure focus).*
 
-### AI Agents Involved
+**AI Agents Involved**
 *   *None.*
 
-### Deliverables
+**Deliverables**
 *   Live Supabase URL.
 *   `schema.sql` file.
 *   Functional Login Screen.
 
-### Success Criteria
+**Success Criteria**
 *   A user can sign up, log in, and refresh the page without being logged out.
 *   Database tables exist and are writable.
 
-### Risks
+**Risks**
 *   Improper RLS policies exposing client data.
 
-### Dependencies
+**Dependencies**
 *   Vercel / Hosting account.
 *   Supabase account.
 
 ---
 
-# Phase 1 — Core Wizard (MVP)
+## Phase 1 — Core Wizard (MVP)
 
-### Purpose
+**Purpose**  
 To deliver the core "Consultative" value proposition. This is the "Hook" that convinces a client to work with the agency.
 
-### What’s Included
+**What’s Included**
 *   **Screens 1-5 Logic:** Full end-to-end flow from context to strategy.
 *   **Edge Functions:** 5 distinct functions wrapping Gemini API calls.
 *   **State Management:** Saving wizard progress to the database after each step.
 *   **Error Handling:** UI feedback when AI calls fail or timeout.
 
-### What’s Explicitly NOT Included
+**What’s Explicitly NOT Included**
 *   PDF Export of the strategy.
 *   Editing the strategy manually (Read-only for MVP).
 
-### Gemini 3 Features Used
+**Gemini 3 Features Used**
 *   **Google Search Grounding:** For verifying business details in Step 1.
 *   **Thinking Config:** For generating "Consultant-grade" questions in Step 2 and rigorous auditing in Step 4.
 *   **Structured Outputs:** Enforcing JSON schemas for all steps to ensure UI compatibility.
 
-### AI Agents Involved
+**AI Agents Involved**
 *   **Researcher & Analyst:** Step 1.
 *   **Consultant:** Step 2.
 *   **Architect:** Step 3.
 *   **Auditor:** Step 4.
 *   **Strategist:** Step 5.
 
-### Deliverables
+**Deliverables**
 *   Fully functional `/wizard` route.
 *   5 deployed Edge Functions.
 
-### Success Criteria
+**Success Criteria**
 *   A user can complete the wizard in <5 minutes.
 *   The generated strategy feels "tailored" and not generic.
 *   All data is persisted to Supabase `projects` table.
 
-### Risks
+**Risks**
 *   **Latency:** Gemini calls taking >10s causing user drop-off.
 *   **Hallucination:** AI inventing systems that don't exist.
 
-### Dependencies
+**Dependencies**
 *   Phase 0 (Database).
 
 ---
 
-# Phase 2 — Client Dashboard
+## Phase 2 — Client Dashboard
 
-### Purpose
+**Purpose**  
 To transition the user from "Prospect" to "Client". This is where value is delivered over time.
 
-### What’s Included
+**What’s Included**
 *   **Dashboard UI:** Overview, Phase Tracker, Deliverables list.
 *   **Real Data Binding:** Displaying the *actual* strategy generated in Phase 1 (not mock data).
 *   **Project State:** Tracking "Current Phase" and "Progress %".
 *   **User Management:** Profile settings (Name, Company Logo).
 
-### What’s Explicitly NOT Included
+**What’s Explicitly NOT Included**
 *   Chat interface with AI.
 *   Billing/Stripe integration.
 *   Task management (Drag and drop).
 
-### Gemini 3 Features Used
+**Gemini 3 Features Used**
 *   **Structured Outputs:** Transforming the stored strategy JSON into dashboard widgets.
 
-### AI Agents Involved
+**AI Agents Involved**
 *   **The Planner:** Breaks down the high-level roadmap into a viewable list of deliverables.
 
-### Deliverables
+**Deliverables**
 *   Functional `/dashboard` route.
 *   Persistent "Project Overview" widget.
 
-### Success Criteria
+**Success Criteria**
 *   The dashboard accurately reflects the strategy generated in the Wizard.
 *   Refreshing the page retains all project data.
 
-### Risks
+**Risks**
 *   UI complexity on mobile.
 
-### Dependencies
+**Dependencies**
 *   Phase 1 (Wizard Data).
 
 ---
 
-# Phase 3 — Advanced AI & Automation
+## Phase 3 — Advanced AI & Automation
 
-### Purpose
+**Purpose**  
 To turn the static dashboard into a "Living" system that actively monitors and advises the client.
 
-### What’s Included
+**What’s Included**
 *   **Live Intelligence Feed:** A right-panel widget that updates daily.
 *   **Streaming Responses:** Making AI calls feel instant in the UI.
 *   **Regenerate/Edit:** Allowing users to refine the strategy if requirements change.
 *   **Notifications:** Email/In-app alerts for phase completion.
 
-### What’s Explicitly NOT Included
+**What’s Explicitly NOT Included**
 *   Full autonomous execution (AI actually *doing* the marketing).
 
-### Gemini 3 Features Used
+**Gemini 3 Features Used**
 *   **Interactions API / Streaming:** For real-time feedback.
 *   **Google Search (News):** Monitoring industry news relevant to the client.
 *   **Function Calling:** Triggering external tools (e.g., sending an email via Resend).
 
-### AI Agents Involved
+**AI Agents Involved**
 *   **The Project Monitor:** Runs daily to check for risks or industry shifts.
 *   **The Controller:** Approves changes to the roadmap.
 
-### Deliverables
+**Deliverables**
 *   "Intelligence" Panel active on Dashboard.
 *   Streaming implementations for all Wizard steps.
 
-### Success Criteria
+**Success Criteria**
 *   Dashboard provides new value every login (not static).
 *   AI latency perceived as <1s due to streaming.
 
-### Risks
+**Risks**
 *   High API costs from daily monitoring.
 
-### Dependencies
+**Dependencies**
 *   Phase 2 (Dashboard).
 
 ---

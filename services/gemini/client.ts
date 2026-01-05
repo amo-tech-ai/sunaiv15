@@ -1,6 +1,10 @@
 
 // Configuration for Supabase Edge Functions
 
+// Provided credentials for the live environment
+const LIVE_SUPABASE_URL = 'https://necxcwhuzylsumlkkmlk.supabase.co';
+const LIVE_SUPABASE_ANON_KEY = 'sb_publishable_LFstdKVxHEJ5wntLWtmCoA_P-mQ92kS';
+
 const getSupabaseUrl = () => {
   try {
     // @ts-ignore
@@ -11,9 +15,7 @@ const getSupabaseUrl = () => {
   } catch (e) {
     // Ignore errors
   }
-  // Fallback to local Supabase instance for development
-  // This prevents DNS errors from invalid placeholder domains
-  return 'http://localhost:54321';
+  return LIVE_SUPABASE_URL;
 };
 
 const getSupabaseAnonKey = () => {
@@ -26,7 +28,7 @@ const getSupabaseAnonKey = () => {
   } catch (e) {
     // Ignore errors
   }
-  return '';
+  return LIVE_SUPABASE_ANON_KEY;
 };
 
 export const SUPABASE_URL = getSupabaseUrl();
