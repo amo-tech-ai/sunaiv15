@@ -1,3 +1,4 @@
+
 // Business Context
 export interface BusinessProfile {
   fullName: string;
@@ -18,7 +19,7 @@ export interface BusinessAnalysis {
 // Industry Deep Dive (Step 2)
 export interface BottleneckQuestion {
   id: string;
-  category: 'Business Focus' | 'Operational Friction' | 'AI Leverage';
+  category: 'Business Focus' | 'Operational Friction' | 'Speed to Execution' | 'Priority';
   text: string;
   rationale: string; // "Why this matters"
   type: 'single' | 'multi' | 'slider';

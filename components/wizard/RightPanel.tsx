@@ -1,7 +1,8 @@
+
 import React from 'react';
 import { Card, Badge } from '../ui';
 import { BusinessAnalysis } from '../../types';
-import { Loader2, Sparkles, Search, Briefcase, Layers, Lightbulb, Target, ShieldCheck } from 'lucide-react';
+import { Loader2, Sparkles, Search, Briefcase, Layers, Lightbulb, Target, ShieldCheck, Check } from 'lucide-react';
 
 interface RightPanelProps {
   step: number;
@@ -19,27 +20,66 @@ export const RightPanel: React.FC<RightPanelProps> = ({ step, loading, loadingTe
       </div>
 
       {loading ? (
-        <div className="flex flex-col items-center justify-center h-64 text-center animate-fade-in px-4">
-          <div className="relative mb-6">
-            <div className="absolute inset-0 bg-brand-100 rounded-full animate-ping opacity-75"></div>
-            <div className="relative bg-white p-3 rounded-full border border-brand-100 shadow-sm">
-              <Loader2 className="w-8 h-8 text-brand-500 animate-spin" />
+        <div className="flex flex-col h-full animate-fade-in">
+           {step === 1 ? (
+             <div className="space-y-6">
+                <div className="flex items-center gap-3 mb-6">
+                   <Loader2 className="w-5 h-5 text-brand-500 animate-spin" />
+                   <span className="text-sm font-semibold text-slate-900">Analyzing your business...</span>
+                </div>
+                {/* Simulated Analysis Steps */}
+                <div className="space-y-4 pl-2">
+                   <div className="flex items-center gap-3 text-sm text-slate-600">
+                      <div className={`w-2 h-2 rounded-full ${loadingText.includes("Researching") || loadingText.includes("Identifying") ? 'bg-brand-500' : 'bg-slate-300 animate-pulse'}`} />
+                      <span>Detecting industry context</span>
+                   </div>
+                   <div className="flex items-center gap-3 text-sm text-slate-600">
+                      <div className={`w-2 h-2 rounded-full ${loadingText.includes("Identifying") ? 'bg-brand-500' : 'bg-slate-300'}`} />
+                      <span>Reviewing digital footprint</span>
+                   </div>
+                   <div className="flex items-center gap-3 text-sm text-slate-600">
+                      <div className={`w-2 h-2 rounded-full ${loadingText.includes("Identifying") ? 'bg-brand-500' : 'bg-slate-300'}`} />
+                      <span>Identifying growth signals</span>
+                   </div>
+                </div>
+             </div>
+           ) : (
+             <div className="flex flex-col items-center justify-center h-64 text-center px-4">
+              <div className="relative mb-6">
+                <div className="absolute inset-0 bg-brand-100 rounded-full animate-ping opacity-75"></div>
+                <div className="relative bg-white p-3 rounded-full border border-brand-100 shadow-sm">
+                  <Loader2 className="w-8 h-8 text-brand-500 animate-spin" />
+                </div>
+              </div>
+              <p className="text-sm text-slate-900 font-medium mb-1">{loadingText}</p>
+              <p className="text-xs text-slate-400">Processing real-time insights...</p>
             </div>
-          </div>
-          <p className="text-sm text-slate-900 font-medium mb-1">{loadingText}</p>
-          <p className="text-xs text-slate-400">Processing real-time insights...</p>
+           )}
         </div>
       ) : (
         <div className="space-y-8 animate-fade-in">
           {step === 1 && !analysis && (
-            <div className="text-center py-10 px-4 border-2 border-dashed border-slate-100 rounded-xl">
-               <Search className="w-8 h-8 text-slate-300 mx-auto mb-3" />
-               <p className="text-sm text-slate-500 font-medium">
-                 Waiting for input...
+            <div className="text-center py-12 px-6 border-2 border-dashed border-slate-100 rounded-xl bg-slate-50/50">
+               <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-sm mx-auto mb-4 text-brand-500">
+                 <Search className="w-6 h-6" />
+               </div>
+               <p className="text-sm text-slate-900 font-semibold mb-2">
+                 Ready to analyze your business
                </p>
-               <p className="text-xs text-slate-400 mt-2">
+               <p className="text-xs text-slate-500 leading-relaxed">
                  We'll use Google Search grounding to verify your business details instantly.
                </p>
+               
+               <div className="mt-6 pt-6 border-t border-slate-200/50 text-left">
+                  <p className="text-[10px] uppercase font-bold text-slate-400 mb-2">What we look for</p>
+                  <ul className="space-y-2">
+                    {['Industry classification', 'Business model (B2B/B2C)', 'Digital maturity signals'].map(item => (
+                      <li key={item} className="flex items-center gap-2 text-xs text-slate-600">
+                        <Check className="w-3 h-3 text-brand-400" /> {item}
+                      </li>
+                    ))}
+                  </ul>
+               </div>
             </div>
           )}
 
@@ -91,6 +131,7 @@ export const RightPanel: React.FC<RightPanelProps> = ({ step, loading, loadingTe
             </div>
           )}
 
+          {/* Other steps content... */}
           {step === 2 && (
              <div className="p-5 bg-gradient-to-br from-brand-50 to-white border border-brand-100 rounded-xl animate-slide-up shadow-sm">
               <Lightbulb className="w-5 h-5 text-brand-600 mb-3" />

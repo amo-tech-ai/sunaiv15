@@ -1,3 +1,4 @@
+
 import { Type } from "@google/genai";
 import { ai } from "../client";
 import { checkApiKey } from "../utils";
@@ -7,26 +8,34 @@ const MOCK_QUESTIONS: BottleneckQuestion[] = [
   { 
     id: 'q1', 
     category: 'Business Focus',
-    text: "What slows growth the most right now?", 
-    rationale: "Faster launches and better planning directly increase margins.",
+    text: "Where is the business losing the most potential revenue right now?", 
+    rationale: "Pinpoints the highest value problem to solve first.",
     type: 'single', 
-    options: ["Content creation takes too long", "Inventory planning is inaccurate", "Marketing doesn’t convert", "Too many returns"] 
+    options: ["Traffic isn't converting into sales", "Customers aren't coming back (retention)", "Average order value is too low", "Marketing costs are too high"] 
   },
   { 
     id: 'q2', 
     category: 'Operational Friction',
-    text: "What takes the most manual effort today?", 
-    rationale: "Automation frees time and reduces costs.",
+    text: "What consumes the most team hours every week?", 
+    rationale: "Identifies where automation can buy back time.",
     type: 'single', 
-    options: ["Creating content for every drop", "Planning campaigns", "Managing inventory data", "Responding to customers"] 
+    options: ["Manually updating inventory & spreadsheets", "Answering repetitive customer support tickets", "Creating content for social & ads", "Processing returns and refunds"] 
   },
   { 
     id: 'q3', 
-    category: 'AI Leverage',
-    text: "What would make the biggest impact this quarter?", 
-    rationale: "Identifying high-leverage AI implementation points.",
+    category: 'Speed to Execution',
+    text: "What slows down your ability to launch new initiatives?", 
+    rationale: "Uncovers bottlenecks in your production cycle.",
     type: 'single',
-    options: ["Turn one shoot into many assets", "Predict best-selling styles", "Personalize marketing by style", "Automate campaign planning"]
+    options: ["Creative assets take too long to produce", "Data is scattered across different tools", "Waiting on technical/dev resources", "Approval workflows are too slow"]
+  },
+  {
+    id: 'q4',
+    category: 'Priority',
+    text: "If you could fix one thing in the next 90 days, what would it be?",
+    rationale: "Helps us prioritize your immediate roadmap.",
+    type: 'single',
+    options: ["Automate customer support", "Scale ad creative production", "Unify customer data", "Predict inventory needs better"]
   }
 ];
 
@@ -39,7 +48,7 @@ export const generateQuestions = async (analysis: BusinessAnalysis, profile: Bus
       type: Type.OBJECT,
       properties: {
         id: { type: Type.STRING },
-        category: { type: Type.STRING, enum: ['Business Focus', 'Operational Friction', 'AI Leverage'] },
+        category: { type: Type.STRING, enum: ['Business Focus', 'Operational Friction', 'Speed to Execution', 'Priority'] },
         text: { type: Type.STRING },
         rationale: { type: Type.STRING },
         type: { type: Type.STRING, enum: ['single'] },
@@ -52,21 +61,29 @@ export const generateQuestions = async (analysis: BusinessAnalysis, profile: Bus
   try {
     const response = await ai.models.generateContent({
       model: 'gemini-3-pro-preview',
-      contents: `Context:
+      contents: `You are a Senior Business Consultant. Design a consulting conversation (not a survey) for this client.
+      
+      Client Context:
       Company: ${profile.companyName}
       Industry: ${analysis.detectedIndustry}
       Model: ${analysis.businessModel}
       Description: ${profile.description}
-      Observations: ${JSON.stringify(analysis.observations)}
 
-      Task: Generate exactly 3 strategic questions to identify AI opportunities.
-      1. Business Focus (Revenue/Cost)
-      2. Operational Friction (Manual work)
-      3. AI Leverage (Impact)
+      Task: Generate exactly 4 questions to identify where AI can increase revenue, reduce costs, or save time.
+      
+      RULES:
+      1. DO NOT use AI jargon (No "agents", "LLMs", "generative").
+      2. Speak in plain business language (Revenue, Time, Speed, Cost).
+      3. Options MUST be specific to the ${analysis.detectedIndustry} industry.
+      
+      Structure the 4 questions exactly as follows:
+      1. Category: 'Business Focus' -> Identify where revenue or growth is leaking.
+      2. Category: 'Operational Friction' -> Identify what wastes time or causes chaos.
+      3. Category: 'Speed to Execution' -> Identify what slows down launching ideas.
+      4. Category: 'Priority' -> Identify the #1 goal for the next 90 days.
 
-      Each question must be specific to the ${analysis.detectedIndustry} industry.
-      Provide 4 options for each question.
-      Provide a short rationale ("Why this matters") for each question.
+      Provide 4 selectable options for each question.
+      Provide a short 1-sentence rationale for why we are asking this.
       `,
       config: {
         responseMimeType: "application/json",

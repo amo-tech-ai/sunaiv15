@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Badge } from '../ui';
+import { CheckCircle2, Circle, Disc } from 'lucide-react';
 import { BusinessProfile, BusinessAnalysis } from '../../types';
 
 interface LeftPanelProps {
@@ -9,54 +9,76 @@ interface LeftPanelProps {
   analysis: BusinessAnalysis | null;
 }
 
+const STEPS = [
+  { num: 1, label: "Business Context" },
+  { num: 2, label: "Industry Deep Dive" },
+  { num: 3, label: "System Selection" },
+  { num: 4, label: "Readiness Check" },
+  { num: 5, label: "Execution Plan" }
+];
+
 export const LeftPanel: React.FC<LeftPanelProps> = ({ step, profile, analysis }) => {
+  const progressPercent = Math.max(5, (step / 5) * 100);
+
   return (
-    <div className="hidden lg:flex flex-col border-r border-slate-200 bg-white w-72 h-full p-8 flex-shrink-0">
-      <div className="mb-8">
-         <h1 className="text-sm font-bold text-brand-600 tracking-wider uppercase mb-1">Sun AI Agency</h1>
-         <div className="h-1 w-8 bg-brand-500 rounded-full"/>
+    <div className="hidden lg:flex flex-col border-r border-slate-200 bg-white w-72 h-full flex-shrink-0 transition-all duration-300">
+      {/* Header */}
+      <div className="p-8 pb-4">
+         <div className="flex items-center gap-2 mb-6">
+            <div className="w-6 h-6 rounded bg-brand-600 flex items-center justify-center shadow-md shadow-brand-200">
+                <span className="text-white font-bold text-xs">S</span>
+            </div>
+            <span className="text-sm font-bold text-slate-900 tracking-wide uppercase">Sun AI Agency</span>
+         </div>
+         
+         <div className="flex items-center justify-between text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">
+            <span>Setup</span>
+            <span>Step {step} of 5</span>
+         </div>
+         
+         {/* Progress Bar */}
+         <div className="h-1.5 w-full bg-slate-100 rounded-full overflow-hidden">
+            <div 
+                className="h-full bg-brand-500 transition-all duration-500 ease-out" 
+                style={{ width: `${progressPercent}%` }}
+            />
+         </div>
       </div>
 
-      <div className="space-y-6">
-         <div className="flex items-center gap-3">
-           <div className="flex items-center justify-center w-8 h-8 rounded-full bg-brand-600 text-white font-bold text-sm shadow-md shadow-brand-200">
-             {step}
-           </div>
-           <div>
-             <div className="text-xs text-slate-400 uppercase font-semibold">Step {step} of 5</div>
-             <div className="text-sm font-medium text-slate-900">
-               {step === 1 && "Business Context"}
-               {step === 2 && "Industry Deep Dive"}
-               {step === 3 && "System Selection"}
-               {step === 4 && "Readiness Check"}
-               {step === 5 && "Execution Plan"}
-             </div>
-           </div>
-         </div>
-
-         {step > 1 && (
-           <div className="pt-6 border-t border-slate-100 animate-fade-in space-y-4">
-              <div>
-                <div className="text-xs text-slate-400 uppercase font-semibold mb-1">Company</div>
-                <div className="text-sm text-slate-900 font-medium truncate">{profile.companyName}</div>
-              </div>
-              <div>
-                <div className="text-xs text-slate-400 uppercase font-semibold mb-1">Industry</div>
-                <div className="text-sm text-slate-900 font-medium truncate">{analysis?.detectedIndustry || profile.industry}</div>
-              </div>
-              <div>
-                <div className="text-xs text-slate-400 uppercase font-semibold mb-1">Model</div>
-                <div className="text-sm text-slate-900 font-medium">
-                  <Badge variant="brand">{analysis?.businessModel || "Analyzing..."}</Badge>
+      {/* Steps List */}
+      <div className="flex-1 overflow-y-auto py-4 px-6 space-y-1">
+        {STEPS.map((s) => {
+            const isActive = step === s.num;
+            const isCompleted = step > s.num;
+            
+            return (
+                <div 
+                    key={s.num} 
+                    className={`flex items-center gap-3 p-3 rounded-lg transition-all duration-200 ${
+                        isActive ? 'bg-brand-50 text-brand-900 translate-x-1' : 'text-slate-500'
+                    }`}
+                >
+                    <div className="flex-shrink-0">
+                        {isCompleted ? (
+                            <CheckCircle2 className="w-5 h-5 text-brand-600" />
+                        ) : isActive ? (
+                            <Disc className="w-5 h-5 text-brand-600 animate-pulse" />
+                        ) : (
+                            <Circle className="w-5 h-5 text-slate-300" />
+                        )}
+                    </div>
+                    <span className={`text-sm font-medium ${isActive ? 'text-brand-900' : 'text-slate-600'}`}>
+                        {s.label}
+                    </span>
                 </div>
-              </div>
-           </div>
-         )}
+            )
+        })}
       </div>
       
-      <div className="mt-auto">
-        <div className="text-xs text-slate-400 leading-relaxed">
-          Need help? <br/> <a href="#" className="text-brand-600 hover:underline">Contact Consultant</a>
+      {/* Footer Info */}
+      <div className="p-8 mt-auto border-t border-slate-100">
+        <div className="text-xs text-slate-400">
+          Need help? <a href="#" className="text-brand-600 hover:underline">Contact Support</a>
         </div>
       </div>
     </div>

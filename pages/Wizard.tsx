@@ -123,7 +123,7 @@ export default function Wizard() {
   const getHeaderContent = () => {
     switch (step) {
       case 1: return { title: "Tell us about your business", sub: "We use this to understand your business and design a practical AI plan." };
-      case 2: return { title: "Let's dive deeper", sub: "Identifying where AI improves your bottom line." };
+      case 2: return { title: "Identify Business Bottlenecks", sub: "Let's identify where we can increase revenue, reduce costs, and save time." };
       case 3: return { title: "Architect your system", sub: "Select systems based on problems, not tools." };
       case 4: return { title: "Readiness Check", sub: "Set expectations and build trust." };
       case 5: return { title: "Your Execution Plan", sub: "Turn insight into a concrete plan." };
