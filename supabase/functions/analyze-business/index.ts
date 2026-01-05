@@ -38,10 +38,11 @@ Deno.serve(async (req: any) => {
       Self-described Industry: ${industry_hint}
       Description: ${description}
 
-      Use Google Search to verify the company. 
-      If a URL is provided, browse it using the search tool to understand their actual offerings.
-      Infer the specific industry niche, their primary business model (B2B/B2C/etc), and their apparent digital maturity based on their web presence.
-      Provide 3 key strategic observations.
+      INSTRUCTIONS:
+      1. Use Google Search to verify the company. 
+      2. If a URL is provided, specifically search for and analyze their 'About Us' and 'Products/Services' pages to extract specific industry keywords and actual offerings.
+      3. Infer the specific industry niche (be precise, e.g., "Fintech - Payment Processing" instead of just "Fintech" or "Technology"), their primary business model (B2B/B2C/etc), and their apparent digital maturity.
+      4. Provide 3 key strategic observations based on their specific product features or service claims found in the search results.
     `
 
     // Streaming response setup
