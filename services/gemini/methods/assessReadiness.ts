@@ -1,14 +1,12 @@
 
-import { getFunctionUrl } from "../client";
+import { getFunctionUrl, getAuthHeaders } from "../client";
 import { BusinessProfile, ReadinessAssessment } from "../../../types";
 
 export const assessReadiness = async (profile: BusinessProfile, systems: string[]): Promise<ReadinessAssessment> => {
   try {
     const response = await fetch(getFunctionUrl('assess-readiness'), {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers: getAuthHeaders(),
       body: JSON.stringify({
         profile,
         systems
@@ -16,7 +14,8 @@ export const assessReadiness = async (profile: BusinessProfile, systems: string[
     });
 
     if (!response.ok) {
-      throw new Error(`Readiness assessment failed: ${response.statusText}`);
+      const errorText = await response.text();
+      throw new Error(`Readiness assessment failed (${response.status}): ${errorText || response.statusText}`);
     }
 
     return await response.json();

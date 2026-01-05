@@ -1,14 +1,12 @@
 
-import { getFunctionUrl } from "../client";
+import { getFunctionUrl, getAuthHeaders } from "../client";
 import { BusinessProfile, BusinessAnalysis, BottleneckQuestion } from "../../../types";
 
 export const generateQuestions = async (analysis: BusinessAnalysis, profile: BusinessProfile): Promise<BottleneckQuestion[]> => {
   try {
     const response = await fetch(getFunctionUrl('generate-questions'), {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers: getAuthHeaders(),
       body: JSON.stringify({
         analysis,
         profile
@@ -16,7 +14,8 @@ export const generateQuestions = async (analysis: BusinessAnalysis, profile: Bus
     });
 
     if (!response.ok) {
-      throw new Error(`Question generation failed: ${response.statusText}`);
+      const errorText = await response.text();
+      throw new Error(`Question generation failed (${response.status}): ${errorText || response.statusText}`);
     }
 
     return await response.json();

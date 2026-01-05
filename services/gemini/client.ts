@@ -3,8 +3,6 @@
 
 const getSupabaseUrl = () => {
   try {
-    // Check if import.meta.env.VITE_SUPABASE_URL is available
-    // We access it statically so bundlers can replace it
     // @ts-ignore
     if (typeof import.meta !== 'undefined' && import.meta.env && import.meta.env.VITE_SUPABASE_URL) {
       // @ts-ignore
@@ -13,11 +11,38 @@ const getSupabaseUrl = () => {
   } catch (e) {
     // Ignore errors
   }
-  // Fallback to hardcoded URL if env var is missing
-  return 'https://necxcwhuzylsumlkkmlk.supabase.co';
+  // Fallback to local Supabase instance for development
+  // This prevents DNS errors from invalid placeholder domains
+  return 'http://localhost:54321';
+};
+
+const getSupabaseAnonKey = () => {
+  try {
+    // @ts-ignore
+    if (typeof import.meta !== 'undefined' && import.meta.env && import.meta.env.VITE_SUPABASE_ANON_KEY) {
+      // @ts-ignore
+      return import.meta.env.VITE_SUPABASE_ANON_KEY;
+    }
+  } catch (e) {
+    // Ignore errors
+  }
+  return '';
 };
 
 export const SUPABASE_URL = getSupabaseUrl();
+export const SUPABASE_ANON_KEY = getSupabaseAnonKey();
 export const FUNCTIONS_URL = `${SUPABASE_URL}/functions/v1`;
 
 export const getFunctionUrl = (name: string) => `${FUNCTIONS_URL}/${name}`;
+
+export const getAuthHeaders = () => {
+  const headers: Record<string, string> = {
+    'Content-Type': 'application/json',
+  };
+  
+  if (SUPABASE_ANON_KEY) {
+    headers['Authorization'] = `Bearer ${SUPABASE_ANON_KEY}`;
+  }
+  
+  return headers;
+};

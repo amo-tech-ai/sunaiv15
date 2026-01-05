@@ -1,14 +1,12 @@
 
-import { getFunctionUrl } from "../client";
+import { getFunctionUrl, getAuthHeaders } from "../client";
 import { BusinessProfile, BusinessAnalysis } from "../../../types";
 
 export const analyzeBusiness = async (profile: BusinessProfile): Promise<BusinessAnalysis> => {
   try {
     const response = await fetch(getFunctionUrl('analyze-business'), {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers: getAuthHeaders(),
       body: JSON.stringify({
         company_name: profile.companyName,
         website_url: profile.website,
@@ -18,7 +16,8 @@ export const analyzeBusiness = async (profile: BusinessProfile): Promise<Busines
     });
 
     if (!response.ok) {
-      throw new Error(`Analysis failed: ${response.statusText}`);
+      const errorText = await response.text();
+      throw new Error(`Analysis failed (${response.status}): ${errorText || response.statusText}`);
     }
 
     const data = await response.json();
