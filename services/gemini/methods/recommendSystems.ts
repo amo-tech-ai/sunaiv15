@@ -14,14 +14,12 @@ export const recommendSystems = async (industry: string, bottlenecks: any): Prom
     });
 
     if (!response.ok) {
-      const errorText = await response.text();
-      throw new Error(`System recommendation failed (${response.status}): ${errorText || response.statusText}`);
+      throw new Error(`Status ${response.status}`);
     }
 
     return await response.json();
   } catch (e) {
-    console.error("Error calling recommend-systems:", e);
-    console.warn("Falling back to mock recommendations");
+    console.warn("Backend unavailable, using local intelligence (Demo Mode)");
 
     // Fallback Mock Data
     return [

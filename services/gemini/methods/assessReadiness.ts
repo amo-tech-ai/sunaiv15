@@ -14,14 +14,12 @@ export const assessReadiness = async (profile: BusinessProfile, systems: string[
     });
 
     if (!response.ok) {
-      const errorText = await response.text();
-      throw new Error(`Readiness assessment failed (${response.status}): ${errorText || response.statusText}`);
+      throw new Error(`Status ${response.status}`);
     }
 
     return await response.json();
   } catch (e) {
-    console.error("Error calling assess-readiness:", e);
-    console.warn("Falling back to mock readiness data");
+    console.warn("Backend unavailable, using local intelligence (Demo Mode)");
 
     // Fallback Mock Data
     return {

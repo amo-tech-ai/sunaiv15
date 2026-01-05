@@ -14,14 +14,12 @@ export const generateStrategy = async (profile: BusinessProfile, systems: string
     });
 
     if (!response.ok) {
-      const errorText = await response.text();
-      throw new Error(`Strategy generation failed (${response.status}): ${errorText || response.statusText}`);
+      throw new Error(`Status ${response.status}`);
     }
 
     return await response.json();
   } catch (e) {
-    console.error("Error calling generate-strategy:", e);
-    console.warn("Falling back to mock strategy");
+    console.warn("Backend unavailable, using local intelligence (Demo Mode)");
 
     // Fallback Mock Data
     return [

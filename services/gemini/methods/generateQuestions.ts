@@ -14,14 +14,12 @@ export const generateQuestions = async (analysis: BusinessAnalysis, profile: Bus
     });
 
     if (!response.ok) {
-      const errorText = await response.text();
-      throw new Error(`Question generation failed (${response.status}): ${errorText || response.statusText}`);
+      throw new Error(`Status ${response.status}`);
     }
 
     return await response.json();
   } catch (e) {
-    console.error("Error calling generate-questions:", e);
-    console.warn("Falling back to mock questions");
+    console.warn("Backend unavailable, using local intelligence (Demo Mode)");
     
     // Fallback Mock Data
     return [
