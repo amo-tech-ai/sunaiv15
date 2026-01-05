@@ -15,18 +15,18 @@ interface Step2DeepDiveProps {
 
 export const Step2DeepDive: React.FC<Step2DeepDiveProps> = ({ questions, answers, setAnswers, onNext, onBack, loading }) => {
   
-  const handleSelect = (qId: string, option: string, type: 'single' | 'multi' | 'slider') => {
+  const handleSelect = (qId: string, optionText: string, type: 'single' | 'multi' | 'slider') => {
     const current = answers[qId] || [];
     let newAnswers: string[];
 
     // Even for single select, we use an array for consistent state structure
     if (type === 'single') {
-        newAnswers = [option];
+        newAnswers = [optionText];
     } else {
-        if (current.includes(option)) {
-            newAnswers = current.filter((i: string) => i !== option);
+        if (current.includes(optionText)) {
+            newAnswers = current.filter((i: string) => i !== optionText);
         } else {
-            newAnswers = [...current, option];
+            newAnswers = [...current, optionText];
         }
     }
     setAnswers({ ...answers, [qId]: newAnswers });
@@ -49,17 +49,18 @@ export const Step2DeepDive: React.FC<Step2DeepDiveProps> = ({ questions, answers
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             {q.options?.map(opt => {
-              const isSelected = answers[q.id]?.includes(opt);
+              const optionText = opt.text;
+              const isSelected = answers[q.id]?.includes(optionText);
               return (
                 <label 
-                  key={opt} 
+                  key={optionText} 
                   className={`flex items-start gap-3 p-4 rounded-xl border cursor-pointer transition-all shadow-sm hover:shadow-md ${isSelected ? 'bg-brand-50 border-brand-500 ring-1 ring-brand-500' : 'bg-white border-slate-200 hover:border-slate-300'} ${loading ? 'opacity-60 pointer-events-none' : ''}`}
-                  onClick={() => handleSelect(q.id, opt, q.type)}
+                  onClick={() => handleSelect(q.id, optionText, q.type)}
                 >
                   <div className={`mt-0.5 w-5 h-5 rounded-full border-2 flex-shrink-0 flex items-center justify-center ${isSelected ? 'border-brand-500 bg-brand-500' : 'border-slate-300 bg-white'}`}>
                     {isSelected && <CheckCircle className="w-3 h-3 text-white" />}
                   </div>
-                  <span className={`text-sm leading-relaxed ${isSelected ? 'text-brand-900 font-medium' : 'text-slate-600'}`}>{opt}</span>
+                  <span className={`text-sm leading-relaxed ${isSelected ? 'text-brand-900 font-medium' : 'text-slate-600'}`}>{optionText}</span>
                 </label>
               );
             })}

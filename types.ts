@@ -16,6 +16,11 @@ export interface BusinessAnalysis {
   observations: string[];
 }
 
+export interface BottleneckOption {
+  text: string;
+  system_hint: string;
+}
+
 // Industry Deep Dive (Step 2)
 export interface BottleneckQuestion {
   id: string;
@@ -23,7 +28,7 @@ export interface BottleneckQuestion {
   text: string;
   rationale: string; // "Why this matters"
   type: 'single' | 'multi' | 'slider';
-  options?: string[];
+  options: BottleneckOption[];
 }
 
 // System Selection (Step 3)
